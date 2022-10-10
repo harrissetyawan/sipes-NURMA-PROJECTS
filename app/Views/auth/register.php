@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/authentication/style.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <title>Register</title>
 </head>
 
@@ -27,7 +27,7 @@
         <?php $validation = \Config\Services::validation(); ?>
         <?php if (!empty(session()->getFlashdata('error'))) : ?>
         <?php endif; ?>
-        <form class="form-signin" method="post" action="<?= base_url(); ?>/auth/register/process">
+        <form class="form-signin" method="post" action="<?= base_url(); ?>/auth/register/process" id="regis_form">
             <?= csrf_field(); ?>
             <h1 class="mt-5">Form Registrasi Siswa</h1>
             <h5>Data Akun</h5>
@@ -301,7 +301,6 @@
             <h5>Data Alamat</h5>
             <hr>
 
-
             <div class="form-group">
                 <label for="">Provinsi</label>
                 <select name="provinsi" id="provinsi" class="form-control form-control-sm">
@@ -339,7 +338,7 @@
             <div class="form-group my-auto">
                 <input id="pac-input" class="controls" type="text" placeholder="Search Box" style="font-size:17px">
                 <!-- BUTTON MyLocation -->
-                <button class="btn btn-info" id="pac-button">Lokasi Saya Saat Ini</button>
+                <button class="btn btn-info " id="pac-button" type="button">Lokasi Saya Saat Ini</button>
                 <div id="map" class="mx-auto"></div>
 
             </div>
@@ -380,6 +379,7 @@
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+        <script src="<?= base_url() ?>/assets/js/validate.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>/assets/js/ajax.js" type="text/javascript"></script>
 
 </body>
@@ -387,6 +387,7 @@
 </html>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script>
     // PASSWORD MATCH
     let span = document.getElementById('pass_warning');
@@ -464,10 +465,14 @@
 
         const searchBox = new google.maps.places.SearchBox(document.getElementById('pac-input'));
 
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('pac-input'));
+        map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById('pac-input'));
         map.addListener("bounds_changed", () => {
             searchBox.setBounds(map.getBounds());
         });
+
+        // Current LOC Button
+        const locBtn = document.getElementById('pac-button');
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locBtn);
 
         searchBox.addListener('places_changed', function() {
             const places = searchBox.getPlaces();
@@ -491,6 +496,32 @@
             document.getElementById("latitude").value = latitude;
             document.getElementById("longitude").value = longitude;
             calculate();
+        });
+
+        locBtn.addEventListener("click", (e) => {
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+
+                        document.getElementById("latitude").value = position.coords.latitude;
+                        document.getElementById("longitude").value = position.coords.longitude;
+
+                        placeMarker(pos);
+                        map.setCenter(pos);
+                    },
+                    () => {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    }
+                );
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
         });
 
         map.addListener("click", (e) => {
