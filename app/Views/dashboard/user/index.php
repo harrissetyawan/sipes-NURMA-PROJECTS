@@ -21,10 +21,10 @@
           <td><?= $users->email ?></td>
           <td><?= $users->role ?></td>
           <td>
-            <a id="siswaEdit" style="text-decoration: none; color:green;" class="btn btn-small" data-toggle="modal" data-target="#ModalEdit" data-id="<?= $users->user_id ?>">
+            <!-- <a id="siswaEdit" style="text-decoration: none; color:green;" class="btn btn-small" data-toggle="modal" data-target="#ModalEdit" data-id="<?= $users->user_id ?>">
               <i class="fas fa-edit"></i> Edit
-            </a>
-            <a href="#" style="text-decoration: none; color:red;" class="btn btn-small">
+            </a> -->
+            <a href="/deleteUser/<?= $users->user_id ?>" style="text-decoration: none; color:red;" class="btn btn-small">
               <i class="fas fa-trash"></i> Hapus
             </a>
           </td>

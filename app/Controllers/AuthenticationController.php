@@ -67,6 +67,15 @@ class AuthenticationController extends BaseController
         }
     }
 
+    // public function checkMail($mail)
+    // {
+    //     $check = $this->validator->setRule([
+    //         $mail => 'is_unique[user.email]'
+    //     ]);
+
+    //     if ($this->validator->hasError($mail)) {
+    //     }
+    // }
     public function store()
     {
         if (!$this->validate([
@@ -184,8 +193,8 @@ class AuthenticationController extends BaseController
             ]
         ];
 
-        $seleksi = new Seleksi();
-        $seleksi->insertBatch($seleksiData);
+        // $seleksi = new Seleksi();
+        // $seleksi->insertBatch($seleksiData);
 
         session()->setFlashdata('success', 'Registrasi Berhasil, Silahkan login dengan akun anda');
         return redirect()->to('/auth/login');
@@ -241,7 +250,7 @@ class AuthenticationController extends BaseController
                             'logged_in' => TRUE
                         ]);
 
-                        return redirect()->to(base_url('/siswa/register'));
+                        return redirect()->to(base_url('/auth/register'));
                     }
                 }
             } else {

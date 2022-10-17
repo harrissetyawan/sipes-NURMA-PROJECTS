@@ -32,12 +32,13 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
-// ------------ FETCH REQUEST
+// ------------ FETCH REQUEST -------------------------------------------------------------------------------
 
 $routes->get('/getProvinsi', 'AuthenticationController::getDataWilayah');
 $routes->post('/getKabupaten/(:num)', 'AuthenticationController::getKabupaten/$1');
 $routes->post('/getKecamatan/(:num)', 'AuthenticationController::getKecamatan/$1');
 $routes->post('/getDesa/(:num)', 'AuthenticationController::getDesa/$1');
+$routes->post('/checkMail/(:any)', 'AuthenticationController::checkMail/$any');
 
 $routes->get('/settings', 'PengaturanController::index', ['filter' => 'auth']);
 $routes->post('/saveSettings/(:num)', 'PengaturanController::save/$1', ['filter' => 'auth']);
@@ -60,7 +61,10 @@ $routes->group('siswa', ['filter' => 'auth'], function ($routes) {
     $routes->post('register/store', 'SiswaController::register_store', ['filter' => 'auth']);
     $routes->get('profile', 'SiswaController::profile', ['filter' => 'auth']);
     $routes->get('seleksi', 'SiswaController::seleksi', ['filter' => 'auth']);
+    $routes->post('update/(:num)', 'SiswaController::update/$1', ['filter' => 'auth']);
 });
+$routes->get('/editSiswa/(:num)', 'SiswaController::editSiswa/$1', ['filter' => 'auth']);
+
 
 $routes->group('pengumuman', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'PengumumanController::index', ['filter' => 'auth']);
@@ -73,6 +77,11 @@ $routes->group('manage', ['filter' => 'auth'], function ($routes) {
     $routes->get('siswa', 'SiswaController::index', ['filter' => 'auth']);
     $routes->get('all-siswa', 'SiswaController::all_siswa', ['filter' => 'auth']);
 });
+
+$routes->get('/deleteUser/(:num)', 'UserController::deleteUser/$1', ['filter' => 'auth']);
+
+
+
 
 $routes->group('profile-matching', ['filter' => 'auth'], function ($routes) {
     $routes->get('aspek', 'AspekController::index');

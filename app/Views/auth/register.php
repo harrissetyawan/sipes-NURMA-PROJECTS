@@ -513,6 +513,7 @@
 
                         placeMarker(pos);
                         map.setCenter(pos);
+                        calculate();
                     },
                     () => {
                         handleLocationError(true, infoWindow, map.getCenter());

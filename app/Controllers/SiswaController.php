@@ -20,6 +20,21 @@ class SiswaController extends BaseController
     {
         $this->modelPengaturan = new modelPengaturan();
     }
+
+    public function index()
+    {
+
+        $user = new User();
+
+        $data['user'] = $user->where('role', 'siswa')
+            ->join('siswa', 'siswa.id_user=user.user_id', 'right')
+            ->orderBy('tgl_lahir', 'asc')
+            ->orderBy('siswa.created_at', 'asc')
+            ->findAll();
+
+        return view('dashboard/siswa/index', $data);
+        // return dd($data['user']);
+    }
     public function register()
     {
         return view('auth/register_siswa');
@@ -105,21 +120,13 @@ class SiswaController extends BaseController
         // return dd($data['siswa']);
         return view('dashboard/profile/index', $data);
     }
-
-    public function index()
+    public function editSiswa($id)
     {
+        $siswa = new Siswa();
+        $data['siswa'] = $siswa->getEditSiswa($id);
 
-        $user = new User();
-
-        $data['user'] = $user->where('role', 'siswa')
-            ->join('siswa', 'siswa.id_user=user.user_id', 'right')
-            ->where('status', 'LOLOS')
-            ->orderBy('tgl_lahir', 'asc')
-            ->orderBy('siswa.created_at', 'asc')
-            ->findAll();
-
-
-        return view('dashboard/siswa/index', $data);
+        return view('dashboard/siswa/editSiswa', $data);
+        // return dd($data['siswa']);
     }
 
     public function seleksi()
@@ -193,5 +200,32 @@ class SiswaController extends BaseController
         }
 
         return $nilaiDaftar;
+    }
+
+    public function update($id)
+    {
+        $siswa = new Siswa();
+        $data = [
+            'nisn' => $this->request->getVar("nisn"),
+            'nama' => $this->request->getVar("nama"),
+            'tempat_lahir' => $this->request->getVar("tempat_lahir"),
+            'tgl_lahir' => $this->request->getVar("tanggal_lahir"),
+            'jenis_kelamin' => $this->request->getVar("jenis_kelamin"),
+            'agama' => $this->request->getVar("agama"),
+            'status_keluarga' => $this->request->getVar("status_keluarga"),
+            'anak_ke' => $this->request->getVar("anak_ke"),
+            'nik' => $this->request->getVar("nik"),
+            'nama_ayah' => $this->request->getVar("nama_ayah"),
+            'pekerjaan_ayah' => $this->request->getVar("pekerjaan_ayah"),
+            'no_telepon_ayah' => $this->request->getVar("no_telepon_ayah"),
+            'nama_ibu' => $this->request->getVar("nama_ibu"),
+            'pekerjaan_ibu' => $this->request->getVar("pekerjaan_ibu"),
+            'no_telepon_ibu' => $this->request->getVar("no_telepon_ibu"),
+            'nama_wali' => $this->request->getVar("nama_wali"),
+        ];
+
+        $siswa->update($id, $data);
+
+        return redirect()->to(base_url("/manage/siswa"));
     }
 }

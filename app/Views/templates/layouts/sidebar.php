@@ -53,6 +53,12 @@
           </li>
           <li class="nav-item">
             <a href="<?= base_url(); ?>/manage/siswa" class="nav-link">
+              <i class="fas fa-users nav-icon"></i>
+              <p>Data Siswa</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= base_url(); ?>/manage/siswa" class="nav-link">
               <i class="fas fa-user-tie nav-icon"></i>
               <p>Data Seleksi Siswa</p>
             </a>

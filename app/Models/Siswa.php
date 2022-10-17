@@ -63,5 +63,7 @@ class Siswa extends Model
 			->join('orangtua', 'orangtua.orangtua_id = siswa.id_orangtua')
 			->join('alamat', 'alamat.alamat_id = siswa.id_alamat')
 			->where('siswa_id', $id)->get()->getResult();
+
+		return $siswa;
 	}
 }

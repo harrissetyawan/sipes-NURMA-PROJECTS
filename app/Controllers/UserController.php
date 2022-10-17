@@ -70,4 +70,13 @@ class UserController extends BaseController
         session()->setFlashdata('success', 'User berhasil ditambahkan');
         return redirect()->to('/manage/user');
     }
+
+    public function deleteUser($id)
+    {
+        $user = new User();
+
+        $user->delete($id);
+
+        return redirect()->to(base_url('/manage/user'));
+    }
 }
